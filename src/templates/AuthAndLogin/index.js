@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/react";
 import styled from "styled-components";
 import color from "../../utils/colours";
 import { useState } from "react";
+import api from "../../hooks/useApi";
 
 const StyledAuthComponent = styled.div`
 display: flex;
@@ -98,7 +99,46 @@ width: 50%;
 
 function AuthAndLogin() {
 
-    const [moment, setMoment] = useState(1)
+    const [moment, setMoment] = useState(1);
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [displayPassword, setDisplayPassword] = useState('password');
+    const [howMeetUs, setHowMeetUs] = useState();
+    const [cellphone, setCellphone] = useState();
+
+    const displayPassHandler = () => {
+        if (displayPassword == 'password') setDisplayPassword('text')
+        if (displayPassword == 'text') setDisplayPassword('password')
+    }
+
+    const loginHandler = () => {
+        api.post(
+            'api/user/auth',
+            { email: email, password: password },
+            { headers: { 'Content-Type': 'application/json' } })
+            .then((res) => {
+                console.log(res.data)
+                window.location.reload()
+            })
+            .catch((error) => console.log(error))
+    }
+
+    const registerHandler = () => {
+        api.post(
+            'api/user/register',
+            {
+                email: email,
+                cellphone: cellphone,
+                howMeetUs: howMeetUs,
+                password: password
+            },
+            { headers: { 'Content-Type': 'application/json' } })
+            .then((res) => {
+                console.log(res.data)
+                window.location.reload()
+            })
+            .catch((error) => console.log(error))
+    }
 
     return (
         <StyledAuthComponent>
@@ -132,7 +172,7 @@ function AuthAndLogin() {
                             <label>
                                 Email *
                             </label>
-                            <input type="email" />
+                            <input type="email" onChange={(event) => setEmail(event.target.value)} />
                             <span className="erro">Email inválido</span>
                         </div>
 
@@ -140,7 +180,7 @@ function AuthAndLogin() {
                             <label>
                                 Seu Whatsapp *
                             </label>
-                            <input type="email" />
+                            <input type="number" onChange={(event) => setCellphone(event.target.value)} />
                             <span className="erro">Número inválido</span>
                         </div>
 
@@ -148,7 +188,7 @@ function AuthAndLogin() {
                             <label>
                                 Como nos conheceu *
                             </label>
-                            <input type="email" />
+                            <input type="text" onChange={(event) => setHowMeetUs(event.target.value)} />
                             <span className="erro">Preencha</span>
                         </div>
 
@@ -156,7 +196,8 @@ function AuthAndLogin() {
                             <label>
                                 Crie sua senha *
                             </label>
-                            <input type="email" />
+                            <input type={displayPassword} onChange={(event) => setPassword(event.target.value)} />
+                            <input type={'checkbox'} onChange={displayPassHandler} />
                             <span className="erro">Sua senha deve conter:</span>
                             {/* <div>
                             <input type="checkbox" />
@@ -170,7 +211,7 @@ function AuthAndLogin() {
                         </div> */}
                         </div>
                         <div className="form-item">
-                            <button className="run">Cadastrar</button>
+                            <button className="run" onClick={registerHandler}>Cadastrar</button>
                         </div>
                     </div>
 
@@ -186,18 +227,25 @@ function AuthAndLogin() {
                             <label>
                                 Email *
                             </label>
-                            <input type="email" />
+                            <input type="email" onChange={(event) => {
+                                setEmail(event.target.value)
+                                console.log(email)
+                            }} />
                             <span className="erro">Email inválido</span>
                         </div>
                         <div className="form-item">
                             <label>
                                 Senha *
                             </label>
-                            <input type="email" />
+                            <input type={displayPassword} onChange={(event) => {
+                                setPassword(event.target.value)
+                                console.log(password)
+                            }} />
+                            <input type={'checkbox'} onChange={displayPassHandler} />
                             <span className="erro">Senha inválida</span>
                         </div>
                         <div className="form-item">
-                            <button className="run">Entrar</button>
+                            <button className="run" onClick={loginHandler}>Entrar</button>
                         </div>
                         <div className="form-item">
                             <button className="nobg">Esqueci a senha</button>
