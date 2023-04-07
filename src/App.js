@@ -2,6 +2,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import api from './hooks/useApi';
 import PetDetails from './templates/PetDetail';
+import AppRouter from './Router';
 
 function App() {
   
@@ -16,18 +17,8 @@ function App() {
   console.log(pets);
   return(
     <>
-    <PetDetails/>
+    <AppRouter/>
     </>
-    // <div>
-    //   <h1>Lista</h1>
-    //   {
-    //     (!pets ? 'Nada não' :
-    //     pets.map((a)=>{
-    //       return(<h1>{a._id  }</h1>)
-    //     })
-    //     )
-    //   }
-    // </div>
     );
 }
 
