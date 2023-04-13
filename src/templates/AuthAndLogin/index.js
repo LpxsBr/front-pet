@@ -3,6 +3,7 @@ import styled from "styled-components";
 import color from "../../utils/colours";
 import { useState } from "react";
 import api from "../../hooks/useApi";
+import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 
 const StyledAuthComponent = styled.div`
 display: flex;
@@ -90,6 +91,31 @@ width: 50%;
                 font-size: xx-small;
                 color: red;
             }
+            
+            .password-input{
+                width: 250px;
+                display: flex;
+                /* flex-direction: column; */
+                justify-content: flex-start;
+                align-items: center;
+                input{
+                    width: 100%;
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+                button{
+                    border-radius: 5px;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                    border: 1.4px solid #E2E8F0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 20px;
+                    height: 100%;
+                }
+            }
         }
     }
 }
@@ -105,10 +131,24 @@ function AuthAndLogin() {
     const [displayPassword, setDisplayPassword] = useState('password');
     const [howMeetUs, setHowMeetUs] = useState();
     const [cellphone, setCellphone] = useState();
+    const [icon, setIcon] = useState(false);
+
+    const formatCellphone = () => {
+        // let re = new RegExp(\^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$)
+        let cell = String(cellphone)
+        let formattedPhone = cell
+        return formattedPhone
+    }
 
     const displayPassHandler = () => {
-        if (displayPassword == 'password') setDisplayPassword('text')
-        if (displayPassword == 'text') setDisplayPassword('password')
+        if (displayPassword == 'password') {
+            setDisplayPassword('text');
+            setIcon(true);
+        }
+        if (displayPassword == 'text') {
+            setDisplayPassword('password')
+            setIcon(false)
+        }
     }
 
     const loginHandler = () => {
@@ -118,7 +158,7 @@ function AuthAndLogin() {
             { headers: { 'Content-Type': 'application/json' } })
             .then((res) => {
                 console.log(res.data)
-                window.location.reload()
+                // window.location.reload()
             })
             .catch((error) => console.log(error))
     }
@@ -135,7 +175,7 @@ function AuthAndLogin() {
             { headers: { 'Content-Type': 'application/json' } })
             .then((res) => {
                 console.log(res.data)
-                window.location.reload()
+                // window.location.reload()
             })
             .catch((error) => console.log(error))
     }
@@ -173,15 +213,15 @@ function AuthAndLogin() {
                                 Email *
                             </label>
                             <input type="email" onChange={(event) => setEmail(event.target.value)} />
-                            <span className="erro">Email inválido</span>
+                            {!email ? <span className="erro">obrigatório</span> : null}
                         </div>
 
                         <div className="form-item">
                             <label>
                                 Seu Whatsapp *
                             </label>
-                            <input type="number" onChange={(event) => setCellphone(event.target.value)} />
-                            <span className="erro">Número inválido</span>
+                            <input type="text" onChange={(event) => setCellphone(event.target.value)} value={formatCellphone()} />
+                            {!cellphone ? <span className="erro">obrigatório</span> : null}
                         </div>
 
                         <div className="form-item">
@@ -189,16 +229,17 @@ function AuthAndLogin() {
                                 Como nos conheceu *
                             </label>
                             <input type="text" onChange={(event) => setHowMeetUs(event.target.value)} />
-                            <span className="erro">Preencha</span>
+                            {!howMeetUs ? <span className="erro">obrigatório</span> : null}
                         </div>
 
                         <div className="form-item">
                             <label>
                                 Crie sua senha *
                             </label>
-                            <input type={displayPassword} onChange={(event) => setPassword(event.target.value)} />
-                            <input type={'checkbox'} onChange={displayPassHandler} />
-                            <span className="erro">Sua senha deve conter:</span>
+                            <div className="password-input">
+                                <input type={displayPassword} onChange={(event) => setPassword(event.target.value)} />
+                                <button  type={'checkbox'} onClick={displayPassHandler}>{!icon ? <AiFillEye/> : <AiFillEyeInvisible/>}</button>                           </div>
+                            {!password ? <span className="erro">obrigatório</span> : null}
                             {/* <div>
                             <input type="checkbox" />
                             
