@@ -6,15 +6,6 @@ import AppRouter from './Router';
 
 function App() {
   
-  const [pets, setPets] = useState()
-
-  useEffect(()=>{
-    api.get('/api/pet/view/')
-    .then((response)=>setPets(response.data))
-    .catch((err)=>console.log(err))
-  },[])
-
-  console.log(pets);
   return(
     <>
     <AppRouter/>
